@@ -158,15 +158,15 @@ features_description.update(traffic_light_features)
 # Example field definition
 roadgraph_transforms = {
     'roadgraph_samples/dir':
-        lambda x : np.reshape(x,(20000,3)),
+        lambda x : np.reshape(x,(30000,3)),
     'roadgraph_samples/id':
-        lambda x : np.reshape(x,(20000,1)),
+        lambda x : np.reshape(x,(30000,1)),
     'roadgraph_samples/type':
-        lambda x : np.reshape(x,(20000,1)),
+        lambda x : np.reshape(x,(30000,1)),
     'roadgraph_samples/valid':
-        lambda x : np.reshape(x,(20000,1)),
+        lambda x : np.reshape(x,(30000,1)),
     'roadgraph_samples/xyz':
-        lambda x : np.reshape(x,(20000,3)),
+        lambda x : np.reshape(x,(30000,3)),
 }
 
 # Features of other agents.
