@@ -9,4 +9,6 @@ batch_size = 1
 
 for tfrecord in tqdm(glob.glob(tfrecord_path+'/*')):
     idxname = idx_path + '/' + tfrecord.split('/')[-1]
-    call(["tfrecord2idx", tfrecord, idxname])
+    print("tfrecord: ", tfrecord)
+    print("idxname: ", idxname)
+    call(["python3 -m tfrecord.tools.tfrecord2idx", tfrecord, idxname])

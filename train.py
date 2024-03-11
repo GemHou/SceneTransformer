@@ -15,14 +15,18 @@ from model.pl_module import SceneTransformer
 def main(cfg):
     os.environ["CUDA_VISIBLE_DEVICES"] = cfg.device_ids
 
-    # GPU_NUM = cfg.device_num
-    # device = torch.device(f'cuda:{GPU_NUM}' if torch.cuda.is_available() else 'cpu')
-    # torch.cuda.set_device(device)
-    # if device.type == 'cuda':
-    #     print(torch.cuda.get_device_name(GPU_NUM))
-    #     print('Memory Usage:')
-    #     print('Allocated:', round(torch.cuda.memory_allocated(GPU_NUM)/1024**3,1), 'GB')
-    #     print('Cached:   ', round(torch.cuda.memory_cached(GPU_NUM)/1024**3,1), 'GB')
+    print("torch.cuda.is_available(): ", torch.cuda.is_available())
+    if not torch.cuda.is_available():
+        raise
+
+    GPU_NUM = cfg.device_num
+    device = torch.device(f'cuda:{GPU_NUM}' if torch.cuda.is_available() else 'cpu')
+    torch.cuda.set_device(device)
+    if device.type == 'cuda':
+        print(torch.cuda.get_device_name(GPU_NUM))
+        print('Memory Usage:')
+        print('Allocated:', round(torch.cuda.memory_allocated(GPU_NUM)/1024**3,1), 'GB')
+        print('Cached:   ', round(torch.cuda.memory_cached(GPU_NUM)/1024**3,1), 'GB')
 
     pl.seed_everything(cfg.seed)
     pwd = hydra.utils.get_original_cwd() + '/'
