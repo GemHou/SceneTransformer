@@ -10,11 +10,27 @@ import pytorch_lightning as pl
 from datautil.waymo_dataset import WaymoDataset, waymo_collate_fn
 from model.pl_module import SceneTransformer
 
+import hydra
+from hydra.core.config_store import ConfigStore
+
 print("torch.cuda.is_available(): ", torch.cuda.is_available())
 
 
-@hydra.main(config_path='./conf', config_name='config.yaml')
-def main(cfg):
+def get_config():
+    # 初始化Hydra配置
+    hydra.initialize(config_path='./conf')  # , config_name='config.yaml'
+
+    # 获取配置变量
+    cfg = hydra.compose(config_name='config.yaml')
+
+    # 返回配置变量
+    return cfg
+
+
+# @hydra.main(config_path='./conf', config_name='config.yaml')
+def main():  # cfg
+    cfg = get_config()
+
     print("torch.cuda.is_available(): ", torch.cuda.is_available())
     if not torch.cuda.is_available():
         raise
@@ -35,7 +51,8 @@ def main(cfg):
         print('Cached:   ', round(torch.cuda.memory_cached(GPU_NUM) / 1024 ** 3, 1), 'GB')
 
     pl.seed_everything(cfg.seed)
-    pwd = hydra.utils.get_original_cwd() + '/'
+    # pwd = hydra.utils.get_original_cwd() + '/'
+    pwd = "/home/houjinghp/study/SceneTransformer/"
     print('Current Path: ', pwd)
 
     dataset_train = WaymoDataset(pwd + cfg.dataset.train.tfrecords, pwd + cfg.dataset.train.idxs)
@@ -47,7 +64,8 @@ def main(cfg):
     model = SceneTransformer(None, cfg.model.in_feature_dim, cfg.model.in_dynamic_rg_dim, cfg.model.in_static_rg_dim,
                              cfg.model.time_steps, cfg.model.feature_dim, cfg.model.head_num, cfg.model.k, cfg.model.F)
 
-    trainer = pl.Trainer(max_epochs=cfg.max_epochs, gpus=cfg.device_num, auto_lr_find=True)
+    print("prepare trainer...")
+    trainer = pl.Trainer(max_epochs=cfg.max_epochs, gpus=1, auto_lr_find=True)
 
     # print("len(dloader_train.dataset): ", len(dloader_train.dataset))
     # from torchvision.datasets.utils import DatasetCatalog
@@ -59,4 +77,5 @@ def main(cfg):
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    main()
+    # sys.exit()
