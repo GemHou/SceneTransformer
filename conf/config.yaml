@@ -7,7 +7,7 @@ dataset:
   valid:
     tfrecords: 'data/tf_example/validation'
     idxs: 'data/idxs_validation_bs_1'
-  batchsize: 1
+  batchsize: 2
 
 # dataset:
 #   train:
@@ -28,8 +28,8 @@ model:
   k: 4
   F: 6
 
-device_ids: '2,3'
-device_num: 2
-max_epochs: 100
+device_ids: '0'
+device_num: 0
+max_epochs: 10
 
 

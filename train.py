@@ -1,6 +1,7 @@
 import os
 import sys
 import hydra
+import tqdm
 
 import torch
 from torch.utils.data import DataLoader
@@ -18,17 +19,14 @@ def main(cfg):
     if not torch.cuda.is_available():
         raise
 
-    cfg.device_ids = '0'
     os.environ["CUDA_VISIBLE_DEVICES"] = cfg.device_ids
 
     print("torch.cuda.is_available(): ", torch.cuda.is_available())
     if not torch.cuda.is_available():
         raise
 
-    cfg.device_num = 0
     GPU_NUM = cfg.device_num
-    # device = torch.device(f'cuda:{GPU_NUM}' if torch.cuda.is_available() else 'cpu')
-    device = torch.device(f'cuda:{0}')
+    device = torch.device(f'cuda:{GPU_NUM}' if torch.cuda.is_available() else 'cpu')
     torch.cuda.set_device(device)
     if device.type == 'cuda':
         print(torch.cuda.get_device_name(GPU_NUM))
@@ -42,13 +40,21 @@ def main(cfg):
 
     dataset_train = WaymoDataset(pwd + cfg.dataset.train.tfrecords, pwd + cfg.dataset.train.idxs)
     dataset_valid = WaymoDataset(pwd + cfg.dataset.valid.tfrecords, pwd + cfg.dataset.valid.idxs)
+
     dloader_train = DataLoader(dataset_train, batch_size=cfg.dataset.batchsize, collate_fn=waymo_collate_fn)
     dloader_valid = DataLoader(dataset_valid, batch_size=cfg.dataset.batchsize, collate_fn=waymo_collate_fn)
 
     model = SceneTransformer(None, cfg.model.in_feature_dim, cfg.model.in_dynamic_rg_dim, cfg.model.in_static_rg_dim,
                              cfg.model.time_steps, cfg.model.feature_dim, cfg.model.head_num, cfg.model.k, cfg.model.F)
 
-    trainer = pl.Trainer(max_epochs=cfg.max_epochs, gpus=cfg.device_num)
+    trainer = pl.Trainer(max_epochs=cfg.max_epochs, gpus=cfg.device_num, auto_lr_find=True)
+
+    # print("len(dloader_train.dataset): ", len(dloader_train.dataset))
+    # from torchvision.datasets.utils import DatasetCatalog
+    for data in tqdm.tqdm(dloader_train):
+        # print("data: ", data)
+        pass
+
     trainer.fit(model, dloader_train, dloader_valid)
 
 

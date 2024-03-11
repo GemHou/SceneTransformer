@@ -125,5 +125,5 @@ class SceneTransformer(pl.LightningModule):
         self.log_dict({'val_loss': loss_})
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters())
+        optimizer = torch.optim.Adam(self.parameters(), lr=0.1)
         return optimizer
