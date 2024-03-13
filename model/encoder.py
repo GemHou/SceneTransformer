@@ -32,9 +32,9 @@ class Encoder(nn.Module):
         # Here is 12 attention layers for 3*[selfatt_Time, selfatt_Agent] and 2*[crossatt_Env, selfatt_Time, selfatt_Agent].
         self.layer_D = SelfAttLayer(self.device, self.time_steps,self.feature_dim,self.head_num,self.k,across_time=True)
         self.layer_E = SelfAttLayer(self.device, self.time_steps,self.feature_dim,self.head_num,self.k,across_time=False)
-        self.layer_F = SelfAttLayer(self.device, self.time_steps,self.feature_dim,self.head_num,self.k,across_time=True)
-        self.layer_G = SelfAttLayer(self.device, self.time_steps,self.feature_dim,self.head_num,self.k,across_time=False)
-        self.layer_H = SelfAttLayer(self.device, self.time_steps,self.feature_dim,self.head_num,self.k,across_time=True)
+        # self.layer_F = SelfAttLayer(self.device, self.time_steps,self.feature_dim,self.head_num,self.k,across_time=True)
+        # self.layer_G = SelfAttLayer(self.device, self.time_steps,self.feature_dim,self.head_num,self.k,across_time=False)
+        # self.layer_H = SelfAttLayer(self.device, self.time_steps,self.feature_dim,self.head_num,self.k,across_time=True)
         self.layer_I = SelfAttLayer(self.device, self.time_steps,self.feature_dim,self.head_num,self.k,across_time=False)
 
         self.layer_J = CrossAttLayer(self.device, self.time_steps,self.feature_dim,self.head_num,self.k)
@@ -60,9 +60,9 @@ class Encoder(nn.Module):
         
         output,_,_,_ = self.layer_D(A_,agent_batch_mask, padding_mask, hidden_mask)
         output,_,_,_ = self.layer_E(output,agent_batch_mask, padding_mask, hidden_mask)
-        output,_,_,_ = self.layer_F(output,agent_batch_mask, padding_mask, hidden_mask)
-        output,_,_,_ = self.layer_G(output,agent_batch_mask, padding_mask, hidden_mask)
-        output,_,_,_ = self.layer_H(output,agent_batch_mask, padding_mask, hidden_mask)
+        # output,_,_,_ = self.layer_F(output,agent_batch_mask, padding_mask, hidden_mask)
+        # output,_,_,_ = self.layer_G(output,agent_batch_mask, padding_mask, hidden_mask)
+        # output,_,_,_ = self.layer_H(output,agent_batch_mask, padding_mask, hidden_mask)
         output,_,_,_ = self.layer_I(output,agent_batch_mask, padding_mask, hidden_mask)
 
         # TODO : add additional artificial agent/time AND adjust mask for it
